@@ -8,19 +8,19 @@
 | **Strings** | `str`, `char` |
 | **Booleans** | `bool` |
 | **Objects** | `list`, `object`, `func`, `tuple` |
-| **Empty** | `void`, `unknown`, `null`, `undefined`, `any` |
+| **Empty** | `void`, `unknown`, `none`, `undefined`, `any` |
 
 ## Variables
 
 ```ts
 // normal variable
-var num1 = 1
+var num1: int = 1
 
 // multiple variables
-var num1, num2
+var num1: int, num2: int
 
 // multiple variables with value
-var num2 = 2, num3 = 3
+var num2: int = 2, num3: int = 3
 
 // multiple variables with diferent type
 var num4: int = 4, say: str = "string"
@@ -30,7 +30,7 @@ var num4: int = 4, say: str = "string"
 
 ```ts
 // normal constant
-const num1 = 1
+const num1: int = 1
 
 // multiple constants (initial value is required)
 const num1: int = 1, num2: int = 2
@@ -42,27 +42,17 @@ const num3: int = 3, say: str = "string"
 ## Tuple
 
 ```ts
-// normal tuple
-var tuple = (1, "Hello", true)
+// normal tuple (without type default is any)
+var tuple: tuple = (1, "Hello", true)
 
 // tuple with type
 var tuple: tuple<int, str> = (1, "Hello")
-
-// tuple with other type declaration (recomended)
-var otherTuple: (int, str) = (1, "Hello")
 
 ```
 
 ## Objects
 
 ```ts
-
-// normal object
-var obj = {
-    name: "John",
-    age: 20
-}
-
 // object with type
 var obj: object = {
     name: "John",
@@ -106,7 +96,7 @@ var otherObj: Person = {
 
 ```ts
 // normal list
-var list = [1, 2, 3]
+var list: list = [1, 2, 3]
 
 // list with type
 var listOfStrings: list<str> = ["Hello", "World"]
