@@ -1,5 +1,7 @@
 # Riot Language specification
 
+Riot is a interpreted programming language strongly inspired by Python, Rust and TypeScript with a focus on simplicity and performance strictly typed.
+
 # Data types
 
 | Type | Description |
