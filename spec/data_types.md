@@ -4,25 +4,25 @@
 
 **Primitivos genericos**
 
-`int` - Números enteros de 128 bits (por defecto)[valores entre -9223372036854775808 y 9223372036854775807]
-`float` - Números decimales de 128 bits (por defecto)[valores entre -1.7976931348623157e+308 y 1.7976931348623157e+308]
-`bigint` - Números enteros de 256 bits (entre 57896044618658097711785492504343953926634992332820282019728792003956564819968- y 57896044618658097711785492504343953926634992332820282019728792003956564819967)
+- `int` - Números enteros de 128 bits (por defecto)[valores entre -9223372036854775808 y 9223372036854775807]
+- `float` - Números decimales de 128 bits (por defecto)[valores entre -1.7976931348623157e+308 y 1.7976931348623157e+308]
+- `bigint` - Números enteros de 256 bits (entre 57896044618658097711785492504343953926634992332820282019728792003956564819968- y 57896044618658097711785492504343953926634992332820282019728792003956564819967)
 
 **Primitivos especificos**
 
-`i8` - Números enteros de 8 bits (entre -128 y 127)
-`i16` - Números enteros de 16 bits (entre -32768 y 32767)
+- `i8` - Números enteros de 8 bits (entre -128 y 127)
+- `i16` - Números enteros de 16 bits (entre -32768 y 32767)
 `i32` - Números enteros de 32 bits (entre -2147483648 y 2147483647)
-`i64` - Números enteros de 64 bits (entre -9223372036854775808 y 9223372036854775807)
-`i128` - Números enteros de 128 bits (entre -170141183460469231731687303715884105728 y 170141183460469231731687303715884105727)
-`u8` - Números enteros sin signo de 8 bits (entre 0 y 255)
-`u16` - Números enteros sin signo de 16 bits (entre 0 y 65535)
-`u32` - Números enteros sin signo de 32 bits (entre 0 y 4294967295)
-`u64` - Números enteros sin signo de 64 bits (entre 0 y 18446744073709551615)
-`u128` - Números enteros sin signo de 128 bits (entre 0 y 340282366920938463463374607431768211455)
-`f32` - Números decimales de 32 bits (entre -3.4028235e+38 y 3.4028235e+38)
-`f64` - Números decimales de 64 bits (entre -1.7976931348623157e+308 y 1.7976931348623157e+308)
-`f128` - Números decimales de 128 bits (entre -1.18973149535723176508575932662800702e+4932 y 1.18973149535723176508575932662800702e+4932)
+- `i64` - Números enteros de 64 bits (entre -9223372036854775808 y 9223372036854775807)
+- `i128` - Números enteros de 128 bits (entre -170141183460469231731687303715884105728 y 170141183460469231731687303715884105727)
+- `u8` - Números enteros sin signo de 8 bits (entre 0 y 255)
+- `u16` - Números enteros sin signo de 16 bits (entre 0 y 65535)
+- `u32` - Números enteros sin signo de 32 bits (entre 0 y 4294967295)
+- `u64` - Números enteros sin signo de 64 bits (entre 0 y 18446744073709551615)
+- `u128` - Números enteros sin signo de 128 bits (entre 0 y 340282366920938463463374607431768211455)
+- `f32` - Números decimales de 32 bits (entre -3.4028235e+38 y 3.4028235e+38)
+- `f64` - Números decimales de 64 bits (entre -1.7976931348623157e+308 y 1.7976931348623157e+308)
+- `f128` - Números decimales de 128 bits (entre -1.18973149535723176508575932662800702e+4932 y 1.18973149535723176508575932662800702e+4932)
 
 ### Ejemplo de uso
 
@@ -63,7 +63,7 @@ const PI: float
 
 **Primitivos genericos**
 
-`bool` - Valores booleanos (por defecto)[true o false]
+- `bool` - Valores booleanos (por defecto)[true o false]
 
 ### Ejemplo de uso
 
@@ -76,7 +76,7 @@ var anotherBoolean: bool = false
 
 **Primitivos genericos**
 
-`char` - Caracteres unicode (por defecto)[valores entre 0 y 1114111] con una longitud de 32 bits
+- `char` - Caracteres unicode (por defecto)[valores entre 0 y 1114111] con una longitud de 32 bits
 
 ### Ejemplo de uso
 
@@ -100,7 +100,7 @@ var backslash: char = '\\'
 
 **Primitivos genericos**
 
-`str` - Cadenas de caracteres unicode (por defecto)[valores entre 0 y 1114111] con una longitud de 32 bits
+- `str` - Cadenas de caracteres unicode (por defecto)[valores entre 0 y 1114111] con una longitud de 32 bits
 
 ### Ejemplo de uso
 
@@ -113,18 +113,18 @@ var anotherString: str = 'Hello world anymore!'
 
 **Primitivos genericos**
 
-`list[str]` - Arreglos de cadenas de caracteres
-`list[int]` - Arreglos de números enteros
-`list[float]` - Arreglos de números decimales
-`list[bool]` - Arreglos de valores booleanos
-`list[char]` - Arreglos de caracteres
-`index[str]` - Arreglos multidimensionales de cadenas de caracteres
+- `list[str]` - Arreglos de cadenas de caracteres
+- `list[int]` - Arreglos de números enteros
+- `list[float]` - Arreglos de números decimales
+- `list[bool]` - Arreglos de valores booleanos
+- `list[char]` - Arreglos de caracteres
+- `index[str]` - Arreglos multidimensionales de cadenas de caracteres
 
 **Primitivos especificos**
-`list[i8|i32|i64...]` - Arreglos de números enteros de diferentes tamaños
-`list[f32|f64...]` - Arreglos de números decimales de diferentes tamaños
-`index[i8|i32|i64...]` - Arreglos multidimensionales de números enteros de diferentes tamaños
-`index[f32|f64...]` - Arreglos multidimensionales de números decimales de diferentes tamaños
+- `list[i8|i32|i64...]` - Arreglos de números enteros de diferentes tamaños
+- `list[f32|f64...]` - Arreglos de números decimales de diferentes tamaños
+- `index[i8|i32|i64...]` - Arreglos multidimensionales de números enteros de diferentes tamaños
+- `index[f32|f64...]` - Arreglos multidimensionales de números decimales de diferentes tamaños
 
 ### Ejemplo de uso
 
@@ -143,12 +143,12 @@ var anotherMatrix: index[int] = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] // 48 bits -- 
 
 **Primitivos genericos**
 
-`tuple[str, int, float, bool, char]` - Tuplas de diferentes tipos de datos
+- `tuple[str, int, float, bool, char]` - Tuplas de diferentes tipos de datos
 
 **Primitivos especificos**
 
-`tuple[i8, i32, i64...]` - Tuplas de números enteros de diferentes tamaños
-`tuple[f32, f64...]` - Tuplas de números decimales de diferentes tamaños
+- `tuple[i8, i32, i64...]` - Tuplas de números enteros de diferentes tamaños
+- `tuple[f32, f64...]` - Tuplas de números decimales de diferentes tamaños
 
 
 ### Ejemplo de uso
@@ -168,12 +168,12 @@ var thirdElement: float = tuple[2]
 
 **Primitivos genericos**
 
-`dict[str|int|float|char, str]` - Diccionarios de cadenas de caracteres
+- `dict[str|int|float|char, str]` - Diccionarios de cadenas de caracteres
 
 **Primitivos especificos**
 
-`dict[i8|i32|i64..., str]` - Diccionarios de números enteros de diferentes tamaños
-`dict[f32|f64..., str]` - Diccionarios de números decimales de diferentes tamaños
+- `dict[i8|i32|i64..., str]` - Diccionarios de números enteros de diferentes tamaños
+- `dict[f32|f64..., str]` - Diccionarios de números decimales de diferentes tamaños
 
 ### Ejemplo de uso
 
@@ -189,9 +189,9 @@ var value: str = dictionary['key'] // 'value'
 
 **Primitivos genericos**
 
-`void` - Valores vacios
-`none` - Valores nulos
-`undefined` - Valores nulos con valor
+- `void` - Valores vacios
+- `none` - Valores nulos
+- `undefined` - Valores nulos con valor
 
 ### Ejemplo de uso
 
