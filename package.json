@@ -11,11 +11,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/bun": "^1.1.4"
-  },
-  "eslintConfig": {
-    "extends": [
-      "standard"
-    ]
+    "@eslint/js": "^9.5.0",
+    "@types/bun": "^1.1.5",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.5.0",
+    "typescript": "5.5.0-beta",
+    "typescript-eslint": "^7.13.1"
   }
 }

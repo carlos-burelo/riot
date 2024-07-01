@@ -1,52 +1,95 @@
-//@ts-nocheck
-let numbers: int[] = [1.2, 3, 'TEXT', true]
+let i: i8 = 127
+let j: i8 = 3
 
-let a: str = 1
 
-const b = "Hello, world!"
-
-var c = 3.14
-
-if (a == 1) {
-  a = 2
-} else if (a == 2) {
-  a = 3
-} else {
-  a = 4
+fn suma(n: i8, n2: i8): i8 {
+    return n + n2
 }
 
-for (let i: int = 0; i < 10; i++) {
-  print(i)
+fn resta(n: i8, n2: i8): i8 {
+    return n - n2
 }
 
-while (a < 10) {
-  print(a)
-  a++
+10 |> suma(_,i) 
+   |> resta(_,j)
+   |> `Resultado: ${_}`
+   |> print(_)
+
+// fibonacci
+
+fn fibonacci(n: i8): i8 {
+    // without recursion
+
+    let a: i8 = 0
+    let b: i8 = 1
+    let c: i8 = 0
+
+    if (n == 0) {
+        return a
+    }
+
+    for (let i: i8 = 2; i <= n; i++) {
+        c = a + b
+        a = b
+        b = c
+    }
+
+    return b
 }
 
-function add(a: int = 1, b: int): str {
-  return a + b
-}
-class Person {
-  name: str = 'John Doe'
-  name2: str
+let n: i8 = 10
 
-  sayHello(name: str) {
-    print(name)
-  }
+n |> fibonacci(_) |> print(_)
+
+let n: i8 = 10
+
+for (let i of 0..n) {
+    print(i)
 }
 
-let p = Person()
-let x: int = 1
+const my_var: i8 = 0b1010
 
-let h: bool = true
+print(my_var)
 
-let i: int = a > c ? 1 : 2.0
+match (n) {
+    1 => print("uno"),
+    2 => print("dos"),
+    3 => print("tres"),
+    10 => print("diez"),
+    _ => print("otro")
+}
 
 
-let p = Person()
-let x: int = 1
 
-let h: bool = true
+// @animal
+// class Persona extends Human {
+//     static nombre: str = "d"
+//     edad: i8 = 0
 
-let i: int = a > c ? 1 : 2.0
+//     constructor(nombre: str, edad: i8): void {
+//         super()
+//     }
+
+//     static async saludar(): void {
+//         print(`Hola, soy ${this.nombre} y tengo ${this.edad} años`)
+//     }
+// }
+
+
+
+
+fn print_sum(a: i8 = 1): void  {
+    let b: i8 = 2
+    let c:i8 = a + b
+    if (c == 3) {
+        print("Suma correcta")
+    } else {
+        print("Suma incorrecta")
+    }
+
+}
+
+print_sum()
+
+print_sum(2)
+

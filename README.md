@@ -28,20 +28,13 @@ Riot es un lenguaje de programacion interpretado fuertemente inspirado en Python
 - [] Tuplas
 - [] Enumeraciones
 - [] Excepciones
-- [] Manejo de archivos
-- [] Manejo de errores
-- [] Manejo de cadenas
-- [] Manejo de numeros
-- [] Manejo de fechas
-- [] Manejo de horas
-- [] Manejo de tiempo
-- [] Manejo de bytes
-- [] Manejo de listas
-- [] Manejo de diccionarios
-- [] Manejo de sets
-- [] Manejo de tuplas
-- [] Manejo de enumeraciones
-- [] Manejo de excepciones
+
+
+## TODO:
+
+- [ ] Revisar gramatica de Template literals
+- [ ] Agregar soporte para comentarios multilinea
+- [ ] Agregar tipo de retorno a los metodos de las clases
 
 
 ## Tabla de Contenidos
