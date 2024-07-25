@@ -8,6 +8,15 @@ export default tseslint.config(
     ...tseslint.configs.recommended,
     {
         rules: {
+            '@typescript-eslint/no-unused-vars': [
+                'warn', // or "error"
+                {
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^_',
+                    caughtErrorsIgnorePattern: '^_'
+                }
+            ],
+            'no-unused-private-class-members': 'warn',
             '@typescript-eslint/no-explicit-any': 'off',
             // semicolons: off, prefer, singlequote
 

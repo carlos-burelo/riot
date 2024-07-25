@@ -828,8 +828,6 @@ class ClassProperty extends ASTNode {
         public decorators?: Decorator[]
     ) { super() }
 }
-type SkipType = { skipType: boolean }
-const DEFAULT_SKIP_TYPE: SkipType = { skipType: false }
 const DEFAULT_TYPE = new TypeAnnotation('any')
 class SintacticAnalyzer {
     current: number = 0
@@ -843,14 +841,14 @@ class SintacticAnalyzer {
         return new Program(statements)
     }
     parseType(): Type {
-        const base = this.expect(T.Identifier, 'Se esperaba el nombre del tipo.')
+        const base = this.expect(T.Identifier)
         let type: Type = new TypeAnnotation(base.value)
         while (this.match(T.LessThan)) {
             const params: Type[] = this.list(() => this.parseType(), T.GreaterThan)
             type = new GenericTypeAnnotation(type, params)
         }
         while (this.match(T.OpenBracket)) {
-            this.expect(T.CloseBracket, 'Se esperaba \']\' después de \'[\'.')
+            this.expect(T.CloseBracket)
             type = new ArrayTypeAnnotation(type)
         }
         return type
@@ -862,10 +860,7 @@ class SintacticAnalyzer {
             return this.classDeclaration(decorators, isAbstract)
         }
         if (decorators.length > 0 || isAbstract) {
-            throw this.error(
-                this.previous(),
-                'Los decoradores y \'abstract\' solo pueden aplicarse a declaraciones de clase.'
-            )
+            throw this.error(this.previous())
         }
         if (this.match(T.Let, T.Const, T.Var)) return this.variableDeclaration()
         if (this.match(T.Function)) return this.functionDeclaration()
@@ -880,7 +875,7 @@ class SintacticAnalyzer {
             superClass = this.#identifier()
         }
         const implementsList = this.parseImplements()
-        this.expect(T.OpenBrace, 'Se esperaba \'{\' después de la declaración de la clase.')
+        this.expect(T.OpenBrace)
         const body = this.parseClassBody()
         return new ClassDeclaration(id, body, superClass, isAbstract, typeParameters, implementsList, decorators)
     }
@@ -895,7 +890,7 @@ class SintacticAnalyzer {
         return new Decorator(this.expression())
     }
     #identifier(): Identifier {
-        const name = this.expect(T.Identifier, 'Se esperaba un identificador.').value
+        const name = this.expect(T.Identifier).value
         return new Identifier(name)
     }
     #typeParams(): Type[] | undefined {
@@ -907,7 +902,7 @@ class SintacticAnalyzer {
     }
     #block(necessaryBraces: boolean = true): ASTNode[] {
         if (necessaryBraces) {
-            this.expect(T.OpenBrace, 'Se esperaba \'{\' para iniciar el bloque de código.')
+            this.expect(T.OpenBrace)
         }
         if (this.match(T.CloseBrace)) {
             return []
@@ -918,12 +913,12 @@ class SintacticAnalyzer {
             if (stmt) statements.push(stmt)
         }
         if (necessaryBraces) {
-            this.expect(T.CloseBrace, 'Se esperaba \'}\' para cerrar el bloque de código.')
+            this.expect(T.CloseBrace)
         }
         return statements
     }
     #parseParameters(): VariableDeclarator[] {
-        this.expect(T.OpenParen, 'Se esperaba \'(\' antes de los parámetros.')
+        this.expect(T.OpenParen)
         return this.list(() => {
             const decorators = this.parseDecorators()
             const isRest = this.match(T.Spread)
@@ -972,24 +967,23 @@ class SintacticAnalyzer {
         return T.Public
     }
     parseIndexSignature(isStatic: boolean, access: Access): ClassProperty {
-        this.expect(T.OpenBracket, 'Se esperaba \'[\' para la firma del índice.')
+        this.expect(T.OpenBracket)
         const indexName = this.#identifier()
-        this.expect(T.Colon, 'Se esperaba \':\' después del nombre del índice.')
-        this.expect(T.CloseBracket, 'Se esperaba \']\' después del tipo del índice.')
-        this.expect(T.Colon, 'Se esperaba \':\' después de la firma del índice.')
+        this.expect(T.Colon)
+        this.expect(T.CloseBracket)
+        this.expect(T.Colon)
         const valueType = this.parseType()
         return new ClassProperty(indexName, isStatic, access, valueType)
     }
     parseConstructor(decorators: Decorator[], access: Access): MethodDefinition {
-        this.expect(T.Constructor, 'Se esperaba la palabra clave \'constructor\'.')
+        this.expect(T.Constructor)
         const params: VariableDeclarator[] = this.#parseParameters()
-        this.expect(T.Colon, 'Se esperaba notacion de tipo de retorno')
+        this.expect(T.Colon)
         const type = this.parseType()
-        this.expect(T.OpenBrace, 'Se esperaba \'{\' antes del cuerpo de la clase.')
+        this.expect(T.OpenBrace)
         const { body } = this.blockStatement()
         return new MethodDefinition(new Identifier('constructor'), false, T.Constructor, false, params, body, type, decorators, access)
     }
-
     parseMethod(decorators: Decorator[], isStatic: boolean, access: Access, isAsync: boolean): MethodDefinition {
         let kind: MethodKind = T.Method
         if (this.match(T.Get)) {
@@ -1021,15 +1015,15 @@ class SintacticAnalyzer {
     checkAhead(type: T): boolean {
         return this.peek(1).type === type
     }
-    variableDeclaration({ skipType } = DEFAULT_SKIP_TYPE): VariableDeclaration {
+    variableDeclaration(skipType = false): VariableDeclaration {
         const kind = this.previous().type
         const declarations: VariableDeclarator[] = this.list(() => {
-            const name = this.expect(T.Identifier, 'Se esperaba el nombre de la variable.')
+            const name = this.expect(T.Identifier)
             let type: Type = DEFAULT_TYPE
             if (skipType) {
                 if (this.match(T.Colon)) type = this.parseType()
             } else {
-                this.expect(T.Colon, 'Se esperaba notacion de tipo')
+                this.expect(T.Colon)
                 type = this.parseType()
             }
             let init: Expression | undefined
@@ -1040,28 +1034,28 @@ class SintacticAnalyzer {
         return new VariableDeclaration(T[kind] as unknown as Kind, declarations)
     }
     typeDeclaration(): TypeDeclarator {
-        const id = this.expect(T.Identifier, 'Se esperaba el nombre del tipo.')
+        const id = this.expect(T.Identifier)
         const generics = this.match(T.LessThan) ? this.list(() => this.parseType(), T.GreaterThan) : []
         if (this.match(T.OpenBrace)) {
             const properties: Property[] = []
             while (!this.check(T.CloseBrace) && !this.isAtEnd()) {
-                const key = this.expect(T.Identifier, 'Se esperaba el nombre de la propiedad.')
-                this.expect(T.Colon, 'Se esperaba \':\' despues del nombre de la propiedad.')
+                const key = this.expect(T.Identifier)
+                this.expect(T.Colon)
                 const value = this.parseType()
                 properties.push(new Property(new Identifier(key.value), value))
             }
-            this.expect(T.CloseBrace, 'Se esperaba \'}\' despues de las propiedades de tipo.')
+            this.expect(T.CloseBrace)
             return new TypeObjectDeclaration(new Identifier(id.value), properties, generics)
         } else if (this.match(T.Equal)) {
             if (this.match(T.OpenBrace)) {
                 const properties: Property[] = []
                 while (!this.check(T.CloseBrace) && !this.isAtEnd()) {
-                    const key = this.expect(T.Identifier, 'Se esperaba el nombre de la propiedad.')
-                    this.expect(T.Colon, 'Se esperaba \':\' despues del nombre de la propiedad.')
+                    const key = this.expect(T.Identifier)
+                    this.expect(T.Colon)
                     const value = this.parseType()
                     properties.push(new Property(new Identifier(key.value), value))
                 }
-                this.expect(T.CloseBrace, 'Se esperaba \'}\' despues de las propiedades del tipo.')
+                this.expect(T.CloseBrace)
                 return new TypeObjectDeclaration(new Identifier(id.value), properties, generics)
             }
             const types: Type[] = []
@@ -1074,7 +1068,7 @@ class SintacticAnalyzer {
     functionDeclaration(): FunctionStatement {
         const id = this.#identifier()
         const params = this.#parseParameters()
-        this.expect(T.Colon, 'Se esperaba notacion de tipo de retorno')
+        this.expect(T.Colon)
         const type = this.parseType()
         const body = this.#block()
         return new FunctionStatement(id, params, body, type)
@@ -1094,9 +1088,9 @@ class SintacticAnalyzer {
         return new NewExpression(callee, args)
     }
     ifStatement(): IfStatement {
-        this.expect(T.OpenParen, 'Se esperaba ( despues del if.')
+        this.expect(T.OpenParen)
         const test = this.expression()
-        this.expect(T.CloseParen, 'Se esperaba ) despues de la condicion del if')
+        this.expect(T.CloseParen)
         const { body: consequent } = this.statement() as unknown as BlockStatement
         let alternate: IfStatement | ASTNode[] | null = null
         if (this.match(T.Else)) {
@@ -1105,45 +1099,45 @@ class SintacticAnalyzer {
         return new IfStatement(test, consequent, alternate)
     }
     forStatement(): ASTNode {
-        this.expect(T.OpenParen, 'Se esperaba \'(\' despues del \'for\'.')
+        this.expect(T.OpenParen)
         let init: VariableDeclaration | Expression | undefined
         if (this.match(T.Semicolon)) {
             init = undefined
         } else if (this.match(T.Let, T.Const, T.Var)) {
-            init = this.variableDeclaration({ skipType: true })
+            init = this.variableDeclaration(true)
         } else {
             init = this.expression()
         }
         if (this.match(T.In)) {
             const right = this.expression()
-            this.expect(T.CloseParen, 'Se esperaba \')\' despues de la clausula del for-in.')
+            this.expect(T.CloseParen)
             const body = this.#block()
             return new ForInStatement(init!, right, body)
         }
         if (this.match(T.Of)) {
             const right = this.expression()
-            this.expect(T.CloseParen, 'Se esperaba \')\' despues de la clausula for-of.')
+            this.expect(T.CloseParen)
             const body = this.#block()
             return new ForOfStatement(init!, right, body)
         }
         let condition: Expression | undefined = undefined
-        this.expect(T.Semicolon, 'Se esperaba ; despues de la declaracion del iterador')
+        this.expect(T.Semicolon)
         if (!this.check(T.Semicolon)) {
             condition = this.expression()
         }
-        this.expect(T.Semicolon, 'Se esperaba \';\' despues de la condicion iteradora.')
+        this.expect(T.Semicolon)
         let update: Expression | undefined = undefined
         if (!this.check(T.CloseParen)) {
             update = this.expression()
         }
-        this.expect(T.CloseParen, 'Se esperaba \')\' despues de la expresion update')
+        this.expect(T.CloseParen)
         const body = this.#block()
         return new ForStatement(init, condition, update, body)
     }
     whileStatement(): WhileStatement {
-        this.expect(T.OpenParen, 'Se esperaba \'(\' despues de la sentencia \'while\'.')
+        this.expect(T.OpenParen)
         const condition = this.expression()
-        this.expect(T.CloseParen, 'Se esperaba \')\' despues de la condición.')
+        this.expect(T.CloseParen)
         const body = this.#block()
         return new WhileStatement(condition, body)
     }
@@ -1159,22 +1153,22 @@ class SintacticAnalyzer {
         while (!this.check(T.CloseBrace) && !this.isAtEnd()) {
             statements.push(this.declaration()!)
         }
-        this.expect(T.CloseBrace, 'Se esperaba \'}\'.')
+        this.expect(T.CloseBrace)
         return new BlockStatement(statements)
     }
     matchStatement(): MatchStatement {
-        this.expect(T.OpenParen, 'Se esperaba \'(\' despues de \'match\'.')
+        this.expect(T.OpenParen)
         const discriminant = this.expression()
-        this.expect(T.CloseParen, 'Se esperaba \')\' despues de la expresion de discriminante.')
-        this.expect(T.OpenBrace, 'Se esperaba \'{\' antes de los casos de coincidencia.')
+        this.expect(T.CloseParen)
+        this.expect(T.OpenBrace)
         let defaultCase: ASTNode | null = null
         const cases: MatchCase[] = this.list(() => {
             const test = this.expression()
-            this.expect(T.DoubleArrow, 'Se esperaba \'=>\' despues del caso de coincidencia.')
+            this.expect(T.DoubleArrow)
             const consequent = this.statement()
             if (test instanceof Identifier && test.name === '_') {
                 if (defaultCase) {
-                    throw this.error(this.previous(), 'Solo se permite un caso predeterminado en una declaración de coincidencia.')
+                    throw this.error(this.previous())
                 }
                 defaultCase = consequent
             }
@@ -1193,7 +1187,7 @@ class SintacticAnalyzer {
             if (expr instanceof Identifier || expr instanceof MemberExpression) {
                 return new AssignmentExpression(expr, right, operator)
             } else {
-                throw this.error(this.previous(), 'Invalid assignment target.')
+                throw this.error(this.previous())
             }
         }
         if (this.match(T.PipeLine)) {
@@ -1209,7 +1203,7 @@ class SintacticAnalyzer {
             if (expr instanceof Identifier || expr instanceof MemberExpression) {
                 return new UnaryExpression(operator, expr, false)
             } else {
-                throw this.error(this.previous(), 'Invalid increment/decrement target.')
+                throw this.error(this.previous())
             }
         }
         return expr
@@ -1218,7 +1212,7 @@ class SintacticAnalyzer {
         let expr = this.logicalOr()
         if (this.match(T.Question)) {
             const consequent = this.expression()
-            this.expect(T.Colon, 'Se esperaba \':\' despues de la consecuencia ternaria.')
+            this.expect(T.Colon)
             const alternate = this.ternary()
             expr = new Conditional(expr, consequent, alternate)
         }
@@ -1325,10 +1319,10 @@ class SintacticAnalyzer {
                 expr = this.finishCall(expr)
             } else if (this.match(T.OpenBracket)) {
                 const index = this.expression()
-                this.expect(T.CloseBracket, 'Se esperaba \']\' despues del indicé.')
+                this.expect(T.CloseBracket)
                 expr = new MemberExpression(expr, index, true)
             } else if (this.match(T.Dot)) {
-                const property = this.expect(T.Identifier, 'Se esperaba el nombre de le propiedad despues del \'.\'')
+                const property = this.expect(T.Identifier)
                 expr = new MemberExpression(expr, new Identifier(property.value), false)
             } else {
                 break
@@ -1388,7 +1382,7 @@ class SintacticAnalyzer {
         }
         if (this.match(T.OpenParen)) {
             const expr = this.expression()
-            this.expect(T.CloseParen, 'Se esperaba \')\' despues de la expresión.')
+            this.expect(T.CloseParen)
             return expr
         }
         if (this.match(T.OpenBracket)) {
@@ -1397,8 +1391,8 @@ class SintacticAnalyzer {
         }
         if (this.match(T.OpenBrace)) {
             const properties = this.list(() => {
-                const key = this.expect(T.Identifier, 'Se esperaba el nombre de la propiedad.')
-                this.expect(T.Colon, 'Se esperaba \':\' despues del nombre de la propiedad.')
+                const key = this.expect(T.Identifier)
+                this.expect(T.Colon)
                 const value = this.expression()
                 return new Property(new Identifier(key.value), value)
             }, T.CloseBrace)
@@ -1409,15 +1403,15 @@ class SintacticAnalyzer {
         }
         if (this.match(T.Super)) {
             if (this.match(T.Dot)) {
-                const property = this.expect(T.Identifier, 'Se esperaba el nombre de la propiedad despues del \'.\'')
+                const property = this.expect(T.Identifier)
                 return new MemberExpression(new Identifier('super'), new Identifier(property.value), false)
             } else if (this.match(T.OpenParen)) {
                 return this.finishCall(new Identifier('super'))
             } else {
-                throw this.error(this.peek(), 'Se esperaba \'.\' o \'(\' despues de \'super\'.')
+                throw this.error(this.peek())
             }
         }
-        throw this.error(this.peek(), 'Se esperaba una expresión.')
+        throw this.error(this.peek())
     }
     list<T>(parseItem: () => T, endToken?: any): T[] {
         const items: T[] = []
@@ -1426,7 +1420,7 @@ class SintacticAnalyzer {
                 do items.push(parseItem())
                 while (this.match(T.Comma))
             }
-            this.expect(endToken, `Se esperaba '${T[endToken]}' despues de la lista.`)
+            this.expect(endToken)
         } else {
             do items.push(parseItem())
             while (this.match(T.Comma))
@@ -1460,18 +1454,18 @@ class SintacticAnalyzer {
     previous(): Token {
         return this.tokens[this.current - 1]
     }
-    expect(type: T, message: string): Token {
+    expect(type: T): Token {
         if (this.check(type)) return this.advance()
-        throw this.error(this.peek(), message, type)
+        throw this.error(this.peek(), type)
     }
-    error(token: Token, message: string, expectedType?: T): Error {
+    error(token: Token, expectedType?: T): Error {
         const value = token.value
         const previous = this.previous().value
         const next = this.peek().value
         const expected = T[expectedType!]
         const got = T[token.type]
         const error = new Error(
-            `Error: ${message}\n` +
+            `Error: Expected ${expectedType ? T[expectedType] : 'Token'} but got ${T[token.type]}\n` +
             `Previous: ${previous}\n` +
             `Current: ${value}\n` +
             `Next: ${next}\n` +
@@ -1480,7 +1474,7 @@ class SintacticAnalyzer {
         return error
     }
     stringLiteral(): StringLiteral {
-        const value = this.expect(T.StringLiteral, 'Se esperaba una cadena de texto.')
+        const value = this.expect(T.StringLiteral)
         return new StringLiteral(value.value)
     }
 }
@@ -1694,7 +1688,6 @@ class SemanticAnalizer {
         return this.table.lookup(node.name)
     }
     functionDeclaration(node: FunctionStatement): void {
-        // Define the function in the current scope without executing its body
         this.table.define(node.id.name, (...args: any[]) => {
             const previousTable = this.table
             this.table = this.table.push()
@@ -1782,8 +1775,6 @@ class SemanticAnalizer {
                 break
             }
             if (discriminant === this.visit(test)) {
-                // console.log(consequent)
-                // consequent.forEach(statement => this.visit(statement))
                 if (consequent) this.visit(consequent)
                 matchFound = true
                 break
@@ -1935,10 +1926,8 @@ const file = Bun.file(path)
 const source = await file.text()
 const lexer = new LexicalAnalyzer(source)
 const tokens = lexer.tokenize()
-// console.table(tokens.map(token => ({ type: T[token.type], value: token.value })));
 const parser = new SintacticAnalyzer(tokens)
 const ast = parser.parse()
-// console.dir(ast, { depth: null });
 const semantic = new SemanticAnalizer(ast)
 semantic.analyze()
 export { }

@@ -1,95 +1,98 @@
-let i: i8 = 127
-let j: i8 = 3
-
-
-fn suma(n: i8, n2: i8): i8 {
-    return n + n2
-}
-
-fn resta(n: i8, n2: i8): i8 {
-    return n - n2
-}
-
-10 |> suma(_,i) 
-   |> resta(_,j)
-   |> `Resultado: ${_}`
-   |> print(_)
-
 // fibonacci
 
-fn fibonacci(n: i8): i8 {
-    // without recursion
-
-    let a: i8 = 0
-    let b: i8 = 1
-    let c: i8 = 0
-
-    if (n == 0) {
-        return a
+fn fibonacci(n: int): int {
+    if (n <= 1) {
+        return n
     }
+    return fibonacci(n - 1) + fibonacci(n - 2)
+}
 
-    for (let i: i8 = 2; i <= n; i++) {
-        c = a + b
-        a = b
-        b = c
+// Factorial
+
+fn factorial(n: int): int {
+    if (n <= 1) {
+        return 1
     }
-
-    return b
+    return n * factorial(n - 1)
 }
 
-let n: i8 = 10
+// FizzBuzz
 
-n |> fibonacci(_) |> print(_)
-
-let n: i8 = 10
-
-for (let i of 0..n) {
-    print(i)
-}
-
-const my_var: i8 = 0b1010
-
-print(my_var)
-
-match (n) {
-    1 => print("uno"),
-    2 => print("dos"),
-    3 => print("tres"),
-    10 => print("diez"),
-    _ => print("otro")
-}
-
-
-
-// @animal
-// class Persona extends Human {
-//     static nombre: str = "d"
-//     edad: i8 = 0
-
-//     constructor(nombre: str, edad: i8): void {
-//         super()
-//     }
-
-//     static async saludar(): void {
-//         print(`Hola, soy ${this.nombre} y tengo ${this.edad} años`)
-//     }
-// }
-
-
-
-
-fn print_sum(a: i8 = 1): void  {
-    let b: i8 = 2
-    let c:i8 = a + b
-    if (c == 3) {
-        print("Suma correcta")
+fn fizzbuzz(n: int): str {
+    if (n % 15 == 0) {
+        return "FizzBuzz"
+    } else if (n % 3 == 0) {
+        return "Fizz"
+    } else if (n % 5 == 0) {
+        return "Buzz"
     } else {
-        print("Suma incorrecta")
+        return ""
     }
-
 }
 
-print_sum()
+// while loop
 
-print_sum(2)
+fn while_loop(n: int): int {
+    let i: int = 0
+    while (i < n) {
+        i = i + 1
+    }
+    return i
+}
 
+
+let n: int = while_loop(10)
+
+// for loop
+
+fn for_loop(n: int): int {
+    let sum: int = 0
+    for (let i: int = 0; i < n; i = i + 1) {
+        sum = sum + i
+    }
+    return sum
+}
+
+let sum: int = for_loop(10)
+
+// if statement
+
+fn if_statement(n: int): int {
+    if (n < 10) {
+        return 0
+    } else if (n < 20) {
+        return 1
+    } else {
+        return 2
+    }
+}
+
+let result: int = if_statement(15)
+
+// function call
+
+let fib: int = fibonacci(10)
+
+let fact: int = factorial(10)
+
+let fizz: str = fizzbuzz(15)
+
+// for loop with range
+
+fn for_loop_range(n: int): int {
+    let sum: int = 0
+    for (let i: int in 0..10) {
+        sum = sum + i
+    }
+    return sum
+}
+
+let sum_range: int = for_loop_range(10)
+
+let strs: str[] = ['hello', 'world', 'again']
+
+let str: str = strs[10]
+
+type User = {name: str, age: int}
+
+// let user:User  = {name: 'John', age: 20}
